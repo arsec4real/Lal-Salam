@@ -22,8 +22,8 @@ self.addEventListener('message', e => {
 });
 function showN(d) {
   return self.registration.showNotification(d.title||'Lal Salam', {
-    body:d.body||'', icon:d.icon||'./assets/images/notes/F&B SERVICE.png',
-    badge:d.badge||'./assets/images/notes/F&B SERVICE.png',
+    body:d.body||'', icon:d.icon||'./assets/icon/icon.png',
+    badge:d.badge||'./assets/icon/icon.png',
     tag:d.tag||'ls-'+Date.now(), vibrate:d.vibrate||[200,100,200],
     renotify:true, requireInteraction:d.requireInteraction||false,
     actions:d.actions||[], data:{url:d.url||'./'},
