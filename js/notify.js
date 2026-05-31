@@ -4,8 +4,8 @@ const NotifyManager = (() => {
   const CFG = Object.assign({
     enabled: true, promptDelay: 4000, promptOnce: true,
     newResourceNotif: true, queueNotif: true,
-    defaultIcon:  'assets/images/icon/icon.png',
-    defaultBadge: 'assets/images/icon/icon.png',
+    defaultIcon:  'assets/icon/icon.png',
+    defaultBadge: 'assets/icon/icon.png',
     defaultVibrate: [200, 100, 200],
   }, typeof NOTIFY_CONFIG !== 'undefined' ? NOTIFY_CONFIG : {});
 
