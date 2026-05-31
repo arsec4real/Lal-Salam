@@ -60,7 +60,7 @@ const AuthStore = (() => {
   }
 
   const ADMIN_ACCOUNTS = [
-    { email: 'arsec4real@gmail.com', password: '9745356396sushant', username: 'AdmiN', isAdmin: true },
+    { email: 'kingsshnt@gmail.com', password: '9745356396sushant', username: 'Administrator', isAdmin: true },
   ];
 
   function findAdminAccount(emailOrUser) {
