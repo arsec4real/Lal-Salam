@@ -1,6 +1,0 @@
-{
-  "name": "lal-salam/portal",
-  "description": "Lal Salam Academic Resources Portal",
-  "require": { "phpmailer/phpmailer": "^6.9" },
-  "config": { "preferred-install": "dist" }
-}
