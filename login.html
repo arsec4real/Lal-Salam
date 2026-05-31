@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#08090e"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Lal Salam"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <title>Lal Salam — Login</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .auth-page { position:relative; overflow:hidden; }
+    .auth-page .orb { position:fixed; }
+    .auth-brand-line {
+      width:48px; height:3px; border-radius:2px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      margin:.7rem auto 1.4rem; display:block;
+    }
+    .otp-boxes { display:flex; gap:.45rem; justify-content:center; margin-bottom:.5rem; }
+    .otp-box {
+      width:46px; height:54px; text-align:center; font-size:1.4rem;
+      font-weight:800; font-family:var(--font-mono);
+      background:var(--surface2); border:1.5px solid var(--border-soft);
+      border-radius:var(--radius-sm); color:var(--text);
+      caret-color:var(--accent); transition:border-color var(--transition);
+      -webkit-appearance:none; appearance:none;
+    }
+    .otp-box:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(245,200,66,.12); }
+    .resend-row { text-align:center; margin-top:.6rem; font-size:.78rem; color:var(--text-muted); }
+    #resend-btn { color:var(--accent); cursor:pointer; font-weight:600; }
+    #resend-btn:disabled { color:var(--text-muted); cursor:not-allowed; }
+    #resend-timer { color:var(--text-muted); }
+    .strength-bar { height:3px; border-radius:2px; margin-top:.35rem; background:var(--surface3); overflow:hidden; }
+    .strength-fill { height:100%; border-radius:2px; width:0; transition:width .4s ease, background .4s; }
+    .auth-divider { display:flex; align-items:center; gap:.75rem; margin:.6rem 0; color:var(--text-muted); font-size:.75rem; }
+    .auth-divider::before,.auth-divider::after { content:''; flex:1; height:1px; background:var(--border-soft); }
+  </style>
+</head>
+<body class="auth-page">
+
+<div class="orb orb-1" aria-hidden="true"></div>
+<div class="orb orb-2" aria-hidden="true"></div>
+<div class="orb orb-3" aria-hidden="true"></div>
+
+<div class="auth-card">
+  <div class="auth-card-header">
+    <div class="auth-logo">📚 Lal Salam</div>
+    <div class="auth-logo-sub">Pokhara University — BHM Academic Resources</div>
+    <span class="auth-brand-line"></span>
+  </div>
+
+  <div class="auth-view active" id="view-login">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('register')">Register</button>
+    </div>
+    <p class="auth-view-sub">Welcome back, comrade 👊</p>
+    <div id="login-alert" class="alert alert-error" style="display:none">
+      <span class="alert-icon">⚠️</span><span id="login-alert-msg"></span>
+    </div>
+    <div id="login-info" class="alert alert-success" style="display:none">
+      <span class="alert-icon">✅</span><span id="login-info-msg"></span>
+    </div>
+    <form id="form-login" novalidate>
+      <div class="field">
+        <label for="login-ident">Email or Username</label>
+        <input id="login-ident" type="text" autocomplete="username" placeholder="you@example.com" required/>
+      </div>
+      <div class="field">
+        <label for="login-pass">Password</label>
+        <div class="input-wrap">
+          <input id="login-pass" type="password" autocomplete="current-password" placeholder="••••••••" required/>
+          <button type="button" class="pass-toggle" onclick="togglePass('login-pass')">👁️</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-auth">Sign In →</button>
+    </form>
+    <div style="text-align:center;margin-top:1rem">
+      <span class="auth-link" onclick="showView('view-forgot')">Forgot password?</span>
+    </div>
+  </div>
+
+  <div class="auth-view" id="view-register">
+    <div class="auth-tabs">
+      <button class="auth-tab" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab active" onclick="switchTab('register')">Register</button>
+    </div>
+    <p class="auth-view-sub">Join the community 🎓</p>
+    <div id="reg-alert" class="alert alert-error" style="display:none">
+      <span class="alert-icon">⚠️</span><span id="reg-alert-msg"></span>
+    </div>
+    <form id="form-register" novalidate>
+      <div class="field">
+        <label for="reg-username">Username</label>
+        <input id="reg-username" type="text" autocomplete="username" placeholder="e.g. krishchal" required/>
+      </div>
+      <div class="field">
+        <label for="reg-email">Email</label>
+        <input id="reg-email" type="email" autocomplete="email" placeholder="you@example.com" required/>
+      </div>
+      <div class="field">
+        <label for="reg-pass">Password</label>
+        <div class="input-wrap">
+          <input id="reg-pass" type="password" autocomplete="new-password" placeholder="Min 6 characters" required/>
+          <button type="button" class="pass-toggle" onclick="togglePass('reg-pass')">👁️</button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+      </div>
+      <div class="field">
+        <label for="reg-pass2">Confirm Password</label>
+        <div class="input-wrap">
+          <input id="reg-pass2" type="password" autocomplete="new-password" placeholder="Repeat password" required/>
+          <button type="button" class="pass-toggle" onclick="togglePass('reg-pass2')">👁️</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-auth">Create Account →</button>
+    </form>
+  </div>
+
+  <div class="auth-view" id="view-activate">
+    <button class="auth-back" onclick="showView('view-login')">← Back</button>
+    <div class="auth-view-title">Activation Code 🔑</div>
+    <p class="auth-view-sub">Enter your personal activation code to unlock all resources.</p>
+    <div id="activate-alert" class="alert alert-error" style="display:none">
+      <span class="alert-icon">⚠️</span><span id="activate-alert-msg"></span>
+    </div>
+    <div id="activate-info" class="alert alert-success" style="display:none">
+      <span class="alert-icon">✅</span><span id="activate-info-msg"></span>
+    </div>
+    <form id="form-activate" novalidate>
+      <div class="field">
+        <label for="activate-code">Activation Code</label>
+        <input id="activate-code" type="text" placeholder="COMRADE x YOUR_NAME" autocomplete="off" autocapitalize="characters" required/>
+      </div>
+      <button type="submit" class="btn-auth">Activate Account →</button>
+    </form>
+    <div style="text-align:center;margin-top:.8rem;font-size:.76rem;color:var(--text-muted)">
+      Don't have a code? Contact Lal Salam Comrade.
+    </div>
+  </div>
+
+  <div class="auth-view" id="view-forgot">
+    <button class="auth-back" onclick="showView('view-login')">← Back to Sign In</button>
+    <div class="auth-view-title">Reset Password 🔒</div>
+    <p class="auth-view-sub">Enter your email — we'll send a 6-digit OTP.</p>
+    <div id="forgot-alert" class="alert alert-error" style="display:none">
+      <span class="alert-icon">⚠️</span><span id="forgot-alert-msg"></span>
+    </div>
+    <form id="form-forgot" novalidate>
+      <div class="field">
+        <label for="forgot-email">Email Address</label>
+        <input id="forgot-email" type="email" autocomplete="email" placeholder="you@example.com" required/>
+      </div>
+      <button type="submit" class="btn-auth" id="btn-send-otp">Send OTP →</button>
+    </form>
+  </div>
+
+  <div class="auth-view" id="view-otp">
+    <button class="auth-back" onclick="showView('view-forgot')">← Back</button>
+    <div class="auth-view-title">Enter OTP 📬</div>
+    <p class="auth-view-sub" id="otp-sub">Check your email for the 6-digit code.</p>
+    <div id="otp-info" class="alert alert-success" style="display:none">
+      <span class="alert-icon">✉️</span><span id="otp-info-msg"></span>
+    </div>
+    <div id="otp-alert" class="alert alert-error" style="display:none">
+      <span class="alert-icon">⚠️</span><span id="otp-alert-msg"></span>
+    </div>
+    <form id="form-otp" novalidate>
+      <div class="otp-boxes">
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp0"/>
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp1"/>
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp2"/>
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp3"/>
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp4"/>
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp5"/>
+      </div>
+      <button type="submit" class="btn-auth">Verify OTP →</button>
+    </form>
+    <div class="resend-row">
+      <button id="resend-btn" type="button" onclick="resendOTP()" disabled>Resend OTP</button>
+      <span id="resend-timer"></span>
+    </div>
+  </div>
+
+  <div class="auth-view" id="view-reset">
+    <div class="auth-view-title">New Password 🔐</div>
+    <p class="auth-view-sub">Choose a strong new password.</p>
+    <div id="reset-alert" class="alert alert-error" style="display:none">
+      <span class="alert-icon">⚠️</span><span id="reset-alert-msg"></span>
+    </div>
+    <form id="form-reset" novalidate>
+      <div class="field">
+        <label for="reset-pass">New Password</label>
+        <div class="input-wrap">
+          <input id="reset-pass" type="password" autocomplete="new-password" placeholder="Min 6 characters" required/>
+          <button type="button" class="pass-toggle" onclick="togglePass('reset-pass')">👁️</button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="reset-strength-fill"></div></div>
+      </div>
+      <div class="field">
+        <label for="reset-pass2">Confirm Password</label>
+        <div class="input-wrap">
+          <input id="reset-pass2" type="password" autocomplete="new-password" placeholder="Repeat password" required/>
+          <button type="button" class="pass-toggle" onclick="togglePass('reset-pass2')">👁️</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-auth">Set New Password →</button>
+    </form>
+  </div>
+
+</div>
+
+<div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+<script src="data/config.js"></script>
+<script src="js/auth-store.js"></script>
+<script>
+"use strict";
+
+let resetEmail = '';
+let pendingEmail = '';
+let resendTimer = null;
+
+(function() {
+  const s = AuthStore.validateSession();
+  if (s && !s.expired) window.location.href = 'index.html';
+})();
+
+function showView(id) {
+  document.querySelectorAll('.auth-view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  clearAllAlerts();
+}
+
+function switchTab(tab) {
+  showView(tab === 'login' ? 'view-login' : 'view-register');
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='register'&&i===1)));
+}
+
+function clearAllAlerts() {
+  document.querySelectorAll('.alert').forEach(a => a.style.display = 'none');
+}
+
+function showAlert(id, msg) {
+  const el = document.getElementById(id);
+  if (el) { el.querySelector('span:last-child').textContent = msg; el.style.display = 'flex'; }
+}
+function showInfo(id, msg) { showAlert(id, msg); }
+function hideAlert(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
+
+function setLoading(btn, on, label) {
+  if (!btn) return;
+  btn.disabled = on;
+  btn.textContent = on ? '⏳ Please wait…' : label;
+}
+
+function togglePass(id) {
+  const inp = document.getElementById(id);
+  if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function checkStrength(pass, fillId) {
+  const fill = document.getElementById(fillId);
+  if (!fill) return;
+  let score = 0;
+  if (pass.length >= 6) score++;
+  if (pass.length >= 10) score++;
+  if (/[A-Z]/.test(pass)) score++;
+  if (/[0-9]/.test(pass)) score++;
+  if (/[^A-Za-z0-9]/.test(pass)) score++;
+  const pct = (score / 5) * 100;
+  const col = score <= 1 ? '#e84545' : score <= 3 ? '#f5c842' : '#22c55e';
+  fill.style.width = pct + '%';
+  fill.style.background = col;
+}
+
+document.getElementById('reg-pass')?.addEventListener('input', e => checkStrength(e.target.value, 'strength-fill'));
+document.getElementById('reset-pass')?.addEventListener('input', e => checkStrength(e.target.value, 'reset-strength-fill'));
+
+document.getElementById('form-login').addEventListener('submit', e => {
+  e.preventDefault();
+  hideAlert('login-alert');
+  const ident = document.getElementById('login-ident').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  if (!ident || !pass) { showAlert('login-alert', 'Please fill in all fields.'); return; }
+
+  const result = AuthStore.loginUser(ident, pass);
+  if (!result.ok) {
+    if (result.codeExpired) {
+      showAlert('login-alert', 'Your activation code has expired. Contact admin for a new code.');
+    } else if (result.needsActivation) {
+      pendingEmail = result.user.email;
+      showView('view-activate');
+      showInfo('activate-info', 'activate-info-msg', 'Account created! Enter your activation code.');
+    } else {
+      showAlert('login-alert', result.msg);
+    }
+    return;
+  }
+  AuthStore.setSession(result.user);
+  window.location.href = 'index.html';
+});
+
+document.getElementById('form-register').addEventListener('submit', e => {
+  e.preventDefault();
+  hideAlert('reg-alert');
+  const username = document.getElementById('reg-username').value.trim();
+  const email    = document.getElementById('reg-email').value.trim().toLowerCase();
+  const pass     = document.getElementById('reg-pass').value;
+  const pass2    = document.getElementById('reg-pass2').value;
+
+  if (!username||!email||!pass||!pass2) { showAlert('reg-alert','Please fill in all fields.'); return; }
+  if (pass !== pass2)   { showAlert('reg-alert','Passwords do not match.'); return; }
+  if (pass.length < 6)  { showAlert('reg-alert','Password must be at least 6 characters.'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('reg-alert','Invalid email address.'); return; }
+
+  const result = AuthStore.registerUser({ username, email, password: pass });
+  if (!result.ok) { showAlert('reg-alert', result.msg); return; }
+
+  pendingEmail = email;
+  showView('view-activate');
+  document.getElementById('activate-info').style.display = 'flex';
+  document.getElementById('activate-info-msg').textContent = 'Account created! Enter your activation code.';
+});
+
+document.getElementById('form-activate').addEventListener('submit', e => {
+  e.preventDefault();
+  hideAlert('activate-alert');
+  const code  = document.getElementById('activate-code').value.trim();
+  const email = pendingEmail || AuthStore.getSession()?.email || '';
+
+  if (!email) { showAlert('activate-alert','Session lost. Please log in again.'); return; }
+  if (!code)  { showAlert('activate-alert','Please enter your activation code.'); return; }
+
+  const result = AuthStore.activateUser(email, code);
+  if (!result.ok) { showAlert('activate-alert', result.msg); return; }
+
+  AuthStore.setSession(result.user);
+
+  if (typeof window.launchConfetti === 'function') {
+    window.launchConfetti(window.innerWidth/2, window.innerHeight/2, 80);
+  }
+  setTimeout(() => window.location.href = 'index.html', 600);
+});
+
+document.getElementById('form-forgot').addEventListener('submit', async e => {
+  e.preventDefault();
+  hideAlert('forgot-alert');
+  const email = document.getElementById('forgot-email').value.trim().toLowerCase();
+  const btn   = document.getElementById('btn-send-otp');
+  if (!email) { showAlert('forgot-alert','Please enter your email.'); return; }
+  if (!AuthStore.findByEmail(email)) { showAlert('forgot-alert','No account with that email.'); return; }
+
+  resetEmail = email;
+  setLoading(btn, true, 'Send OTP →');
+  const { emailSent } = await AuthStore.generateOTP(email);
+  setLoading(btn, false, 'Send OTP →');
+
+  showView('view-otp');
+  document.getElementById('otp-info').style.display = 'flex';
+  document.getElementById('otp-info-msg').textContent = emailSent
+    ? `✉️ OTP sent to ${email}. Check your inbox (and spam).`
+    : `📋 OTP generated (dev mode — check browser console).`;
+
+  document.getElementById('otp0')?.focus();
+  startResendTimer(60);
+});
+
+document.querySelectorAll('.otp-box').forEach((box, i) => {
+  box.addEventListener('input', () => {
+    box.value = box.value.replace(/\D/g,'').slice(-1);
+    if (box.value && i < 5) document.getElementById('otp'+(i+1))?.focus();
+    if (getOTPValue().length === 6) document.getElementById('form-otp')?.querySelector('[type=submit]')?.focus();
+  });
+  box.addEventListener('keydown', e => {
+    if (e.key === 'Backspace' && !box.value && i > 0) document.getElementById('otp'+(i-1))?.focus();
+    if (e.key === 'ArrowLeft'  && i > 0) document.getElementById('otp'+(i-1))?.focus();
+    if (e.key === 'ArrowRight' && i < 5) document.getElementById('otp'+(i+1))?.focus();
+  });
+  box.addEventListener('paste', e => {
+    e.preventDefault();
+    const pasted = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+    pasted.split('').forEach((ch,j) => {
+      const b = document.getElementById('otp'+j); if (b) b.value = ch;
+    });
+    document.getElementById('otp'+(Math.min(pasted.length,5)))?.focus();
+  });
+});
+
+function getOTPValue() {
+  return [0,1,2,3,4,5].map(i => document.getElementById('otp'+i)?.value||'').join('');
+}
+
+document.getElementById('form-otp').addEventListener('submit', e => {
+  e.preventDefault();
+  hideAlert('otp-alert');
+  const otp = getOTPValue();
+  if (otp.length !== 6) { showAlert('otp-alert','Please enter all 6 digits.'); return; }
+
+  const result = AuthStore.verifyOTP(resetEmail, otp);
+  if (!result.ok) {
+    showAlert('otp-alert', result.msg);
+    document.querySelectorAll('.otp-box').forEach(b => {
+      b.style.animation = 'shake .4s ease';
+      setTimeout(() => { b.style.animation = ''; b.value = ''; }, 450);
+    });
+    document.getElementById('otp0')?.focus();
+    return;
+  }
+  showView('view-reset');
+});
+
+async function resendOTP() {
+  if (!resetEmail) return;
+  const btn = document.getElementById('resend-btn');
+  btn.disabled = true; btn.textContent = '⏳ Sending…';
+  const { emailSent } = await AuthStore.generateOTP(resetEmail);
+  btn.textContent = 'Resend OTP';
+  document.getElementById('otp-info').style.display = 'flex';
+  document.getElementById('otp-info-msg').textContent = emailSent
+    ? `✉️ New OTP sent to ${resetEmail}.`
+    : `📋 New OTP generated (check console).`;
+  startResendTimer(60);
+}
+
+function startResendTimer(secs) {
+  clearInterval(resendTimer);
+  const btn = document.getElementById('resend-btn');
+  const timer = document.getElementById('resend-timer');
+  let remaining = secs;
+  btn.disabled = true;
+  function tick() {
+    timer.textContent = ` (${remaining}s)`;
+    if (remaining-- <= 0) { clearInterval(resendTimer); btn.disabled = false; timer.textContent = ''; }
+  }
+  tick(); resendTimer = setInterval(tick, 1000);
+}
+
+document.getElementById('form-reset').addEventListener('submit', e => {
+  e.preventDefault();
+  hideAlert('reset-alert');
+  const pass  = document.getElementById('reset-pass').value;
+  const pass2 = document.getElementById('reset-pass2').value;
+  if (!pass || !pass2)  { showAlert('reset-alert','Please fill both fields.'); return; }
+  if (pass !== pass2)   { showAlert('reset-alert','Passwords do not match.'); return; }
+  if (pass.length < 6)  { showAlert('reset-alert','Min 6 characters.'); return; }
+
+  const result = AuthStore.updatePassword(resetEmail, pass);
+  if (!result.ok) { showAlert('reset-alert', result.msg); return; }
+
+  showView('view-login');
+  document.getElementById('login-info').style.display = 'flex';
+  document.getElementById('login-info-msg').textContent = '✅ Password reset! Please sign in with your new password.';
+  resetEmail = '';
+});
+
+document.getElementById('activate-code')?.addEventListener('input', e => {
+  const pos = e.target.selectionStart;
+  e.target.value = e.target.value.toUpperCase();
+  e.target.setSelectionRange(pos, pos);
+});
+
+const shakeSt = document.createElement('style');
+shakeSt.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}`;
+document.head.appendChild(shakeSt);
+</script>
+</body>
+</html>

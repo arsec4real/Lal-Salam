@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#08090e"/>
+  <meta name="description" content="Lal Salam — Academic resources for Pokhara University BHM students"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Lal Salam"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="msapplication-TileColor" content="#08090e"/>
+  <title>Lal Salam</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="orb orb-1" aria-hidden="true"></div>
+<div class="orb orb-2" aria-hidden="true"></div>
+<div class="orb orb-3" aria-hidden="true"></div>
+
+<div id="welcome-popup" class="welcome-popup" role="status" aria-live="polite">
+  <h3 id="welcome-msg">Welcome back!</h3>
+  <p>Your academic resources are ready 📚</p>
+</div>
+
+<header class="site-header">
+  <div class="header-top-row">
+    <button class="btn-icon" onclick="logout()" title="Log out" aria-label="Log out">🚪 <span class="btn-label">Logout</span></button>
+  </div>
+  <div class="header-badge"><span>📚</span> <span id="site-badge">Academic Resources</span></div>
+  <h1 class="site-name" id="site-name">Lal Salam</h1>
+  <p class="site-tagline">Resources by <em id="site-author">Lal Salam Comrade</em></p>
+  <p class="site-subtitle" id="site-subtitle">Pokhara University — BHM</p>
+</header>
+
+<nav class="site-nav" role="tablist" aria-label="Resource Sections">
+  <button id="tab-notes" class="tab-btn active" role="tab" aria-selected="true" onclick="showSection('notes')">
+    <span class="tab-icon">📚</span><span>Notes</span><span class="tab-count" id="count-notes">0</span>
+  </button>
+  <button id="tab-assignments" class="tab-btn" role="tab" aria-selected="false" onclick="showSection('assignments')">
+    <span class="tab-icon">📝</span><span>Assignments</span><span class="tab-count" id="count-assignments">0</span>
+  </button>
+  <button id="tab-logbook" class="tab-btn" role="tab" aria-selected="false" onclick="showSection('logbook')">
+    <span class="tab-icon">📓</span><span>Log Book</span><span class="tab-count" id="count-logbook">0</span>
+  </button>
+  <button id="tab-admin" class="tab-btn admin-tab" role="tab" aria-selected="false" onclick="showSection('admin')" style="display:none">
+    <span class="tab-icon">⚙️</span><span>Admin</span>
+  </button>
+</nav>
+
+<main class="main-content">
+
+  <section id="section-notes" class="section active" role="tabpanel">
+    <div class="section-header">
+      <span class="section-icon">📚</span>
+      <div><h2 class="section-title">Lecture <span>Notes</span></h2><p class="section-subtitle">Browse by semester and subject</p></div>
+    </div>
+    <div id="notes-sem-grid" class="sem-grid"></div>
+    <div id="notes-breadcrumb" class="breadcrumb" style="display:none"></div>
+    <div id="notes-subj-grid" class="subj-grid" style="display:none"></div>
+    <div id="notes-cards" class="cards-grid" style="display:none"></div>
+  </section>
+
+  <section id="section-assignments" class="section" role="tabpanel">
+    <div class="section-header">
+      <span class="section-icon">📝</span>
+      <div><h2 class="section-title">Assignment <span>Files</span></h2><p class="section-subtitle">Browse by semester and subject</p></div>
+    </div>
+    <div id="assignments-sem-grid" class="sem-grid"></div>
+    <div id="assignments-breadcrumb" class="breadcrumb" style="display:none"></div>
+    <div id="assignments-subj-grid" class="subj-grid" style="display:none"></div>
+    <div id="assignments-cards" class="cards-grid" style="display:none"></div>
+  </section>
+
+  <section id="section-logbook" class="section" role="tabpanel">
+    <div class="section-header">
+      <span class="section-icon">📓</span>
+      <div><h2 class="section-title">Log <span>Book</span></h2><p class="section-subtitle">Practical logs by semester</p></div>
+    </div>
+    <div id="logbook-sem-grid" class="sem-grid"></div>
+    <div id="logbook-breadcrumb" class="breadcrumb" style="display:none"></div>
+    <div id="logbook-subj-grid" class="subj-grid" style="display:none"></div>
+    <div id="logbook-cards" class="cards-grid" style="display:none"></div>
+  </section>
+
+  <section id="section-admin" class="section" role="tabpanel">
+    <div class="section-header">
+      <span class="section-icon">⚙️</span>
+      <div><h2 class="section-title">Admin <span>Panel</span></h2><p class="section-subtitle">Analytics, codes, and notifications</p></div>
+    </div>
+    <div class="admin-grid">
+
+      <div class="admin-card">
+        <h3><span>📊</span> Overview</h3>
+        <div class="stats-row">
+          <div class="stat-box"><div class="stat-val" id="stat-users">0</div><div class="stat-lbl">Users</div></div>
+          <div class="stat-box"><div class="stat-val" id="stat-visits">0</div><div class="stat-lbl">Visits</div></div>
+          <div class="stat-box"><div class="stat-val" id="stat-downloads">0</div><div class="stat-lbl">Downloads</div></div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3><span>🧑‍💻</span> Registered Users</h3>
+        <div id="admin-users-list" class="visitor-list"></div>
+      </div>
+
+      <div class="admin-card">
+        <h3><span>👥</span> Recent Visitors</h3>
+        <div id="admin-visitors" class="visitor-list"></div>
+      </div>
+
+      <div class="admin-card">
+        <h3><span>📋</span> Activity Log</h3>
+        <div id="admin-activity" class="activity-log"></div>
+      </div>
+
+      <div class="admin-card">
+        <h3><span>🔑</span> Activation Codes</h3>
+        <div id="admin-codes" class="code-list"></div>
+      </div>
+
+      <div class="admin-card">
+        <h3><span>🔔</span> Send Notification</h3>
+        <div class="notify-form">
+          <input id="notif-title" type="text" placeholder="Notification title…"/>
+          <textarea id="notif-body" placeholder="Notification body…"></textarea>
+          <button class="btn-admin-send" onclick="adminSendNotif()">Send to All Users 🚀</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<div id="modal-backdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="modal-header">
+      <div id="modal-subject" class="modal-subject"></div>
+      <h2 id="modal-title" class="modal-title"></h2>
+    </div>
+    <div class="modal-body">
+      <div id="modal-preview" class="modal-preview"></div>
+      <p id="modal-desc" class="modal-desc"></p>
+    </div>
+    <div class="modal-footer">
+      <code id="modal-file-info" class="modal-file-info"></code>
+      <button id="btn-download" class="btn-download">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 11l4 4 4-4M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+<footer class="site-footer" style="text-align:center;padding:1rem;font-size:.72rem;color:var(--surface4);border-top:1px solid var(--border-soft);margin-top:2rem;">
+  <p>&copy; <span id="footer-year"></span> — <span id="footer-text">Made with ♥ by Lal Salam Comrade</span></p>
+</footer>
+
+<script src="data/config.js"></script>
+<script src="js/auth-store.js"></script>
+<script src="js/notify.js"></script>
+<script src="js/app.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/animations.js"></script>
+</body>
+</html>
