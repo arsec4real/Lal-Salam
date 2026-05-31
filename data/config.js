@@ -15,6 +15,7 @@ const SITE_CONFIG = {
 ═══════════════════════════════════════════════════════════ */
 const ACTIVATION_CODES = [
   { code: "FUCK BOSTON",           name: "General",        expiresAt: null },
+  { code: "ADMIN ARSEC",           name: "General",        expiresAt: null },
   { code: "COMRADE x KRISHCHAL",   name: "Krishchal",      expiresAt: null },
   { code: "COMRADE x RABIN",       name: "Rabin",          expiresAt: null },
   { code: "COMRADE x SABIN",       name: "Sabin",          expiresAt: null },
