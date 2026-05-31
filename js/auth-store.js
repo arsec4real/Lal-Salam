@@ -72,7 +72,7 @@ const AuthStore = (() => {
     const adminAcc = findAdminAccount(emailOrUser);
     if (adminAcc) {
       if (adminAcc.password !== password) return { ok: false, msg: 'Incorrect password.' };
-      logActivity('login', { username: adminAcc.username, email: adminAcc.email, isAdmin: true });
+      logActivity('login', { username: adminAcc.username, email: adminAcc.email, isAdmin: false });
       return { ok: true, user: { ...adminAcc, id: 'admin', activated: true } };
     }
 
