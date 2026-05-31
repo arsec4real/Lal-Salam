@@ -11,8 +11,8 @@
   "lang": "en",
   "categories": ["education"],
   "icons": [
-    { "src": "assets/images/icon/icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "assets/images/icon/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "assets/icon/icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icon/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "screenshots": [],
   "related_applications": [],
