@@ -1,0 +1,20 @@
+{
+  "name": "Lal Salam",
+  "short_name": "Lal Salam",
+  "description": "Academic resources for Pokhara University BHM students",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090b09",
+  "theme_color": "#090b09",
+  "orientation": "any",
+  "scope": "./",
+  "lang": "en",
+  "categories": ["education"],
+  "icons": [
+    { "src": "assets/icon/icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icon/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

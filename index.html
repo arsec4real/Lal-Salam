@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#090b09"/>
+  <meta name="description" content="Lal Salam — Academic resources for Pokhara University BHM students"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Lal Salam"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="msapplication-TileColor" content="#090b09"/>
+  <title>Lal Salam</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;600&display=swap"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="orb orb-1" aria-hidden="true"></div>
+<div class="orb orb-2" aria-hidden="true"></div>
+<div class="orb orb-3" aria-hidden="true"></div>
+
+<div class="joint joint-1" aria-hidden="true">
+  <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="12" cy="20" rx="9" ry="7" fill="#ff8a3d"/>
+    <rect x="14" y="14" width="88" height="12" rx="6" fill="#f4ead2"/>
+    <rect x="14" y="14" width="88" height="12" rx="6" fill="none" stroke="#d8c9a3" stroke-width="1"/>
+    <rect x="86" y="14" width="16" height="12" rx="6" fill="#e7dcc0"/>
+    <path class="smoke" d="M8 12 C 2 4, 14 4, 8 -4" stroke="rgba(255,255,255,.5)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>
+</div>
+<div class="joint joint-2" aria-hidden="true">
+  <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="12" cy="20" rx="9" ry="7" fill="#ff8a3d"/>
+    <rect x="14" y="14" width="88" height="12" rx="6" fill="#f4ead2"/>
+    <rect x="14" y="14" width="88" height="12" rx="6" fill="none" stroke="#d8c9a3" stroke-width="1"/>
+    <rect x="86" y="14" width="16" height="12" rx="6" fill="#e7dcc0"/>
+    <path class="smoke" d="M8 12 C 2 4, 14 4, 8 -4" stroke="rgba(255,255,255,.5)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>
+</div>
+
+<div id="welcome-popup" class="welcome-popup" role="status" aria-live="polite">
+  <h3 id="welcome-msg">Welcome back!</h3>
+  <p>Your academic resources are ready.</p>
+</div>
+
+<header class="site-header">
+  <div class="header-top-row">
+    <button class="btn-icon" id="btn-guest-name" title="Change your display name" aria-label="Change your display name">🌿 <span class="btn-label" id="guest-name-label">Guest</span></button>
+  </div>
+  <div class="header-badge"><span>📚</span> <span id="site-badge">Academic Resources</span></div>
+  <h1 class="site-name" id="site-name">Lal Salam</h1>
+  <p class="site-tagline">Made by <em id="site-author"></em></p>
+  <p class="site-subtitle" id="site-subtitle">Pokhara University — BHM</p>
+</header>
+
+<nav class="site-nav" role="tablist" aria-label="Resource Sections">
+  <button id="tab-notes" class="tab-btn active" role="tab" aria-selected="true" onclick="showSection('notes')">
+    <span class="tab-icon"></span><span>Notes</span><span class="tab-count" id="count-notes">0</span>
+  </button>
+  <button id="tab-assignments" class="tab-btn" role="tab" aria-selected="false" onclick="showSection('assignments')">
+    <span class="tab-icon"></span><span>Assignments</span><span class="tab-count" id="count-assignments">0</span>
+  </button>
+  <button id="tab-logbook" class="tab-btn" role="tab" aria-selected="false" onclick="showSection('logbook')">
+    <span class="tab-icon"></span><span>Log Book</span><span class="tab-count" id="count-logbook">0</span>
+  </button>
+</nav>
+
+<main class="main-content">
+
+  <section id="section-notes" class="section active" role="tabpanel">
+    <div class="section-header">
+      <span class="section-icon"></span>
+      <div><h2 class="section-title">Lecture <span>Notes</span></h2><p class="section-subtitle">Browse by semester and subject</p></div>
+    </div>
+    <div id="notes-sem-grid" class="sem-grid"></div>
+    <div id="notes-breadcrumb" class="breadcrumb" style="display:none"></div>
+    <div id="notes-subj-grid" class="subj-grid" style="display:none"></div>
+    <div id="notes-cards" class="cards-grid" style="display:none"></div>
+  </section>
+
+  <section id="section-assignments" class="section" role="tabpanel">
+    <div class="section-header">
+      <span class="section-icon"></span>
+      <div><h2 class="section-title">Assignment <span>Files</span></h2><p class="section-subtitle">Browse by semester and subject</p></div>
+    </div>
+    <div id="assignments-sem-grid" class="sem-grid"></div>
+    <div id="assignments-breadcrumb" class="breadcrumb" style="display:none"></div>
+    <div id="assignments-subj-grid" class="subj-grid" style="display:none"></div>
+    <div id="assignments-cards" class="cards-grid" style="display:none"></div>
+  </section>
+
+  <section id="section-logbook" class="section" role="tabpanel">
+    <div class="section-header">
+      <span class="section-icon"></span>
+      <div><h2 class="section-title">Log <span>Book</span></h2><p class="section-subtitle">Practical logs by semester</p></div>
+    </div>
+    <div id="logbook-sem-grid" class="sem-grid"></div>
+    <div id="logbook-breadcrumb" class="breadcrumb" style="display:none"></div>
+    <div id="logbook-subj-grid" class="subj-grid" style="display:none"></div>
+    <div id="logbook-cards" class="cards-grid" style="display:none"></div>
+  </section>
+
+</main>
+
+<div id="modal-backdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="modal-header">
+      <div id="modal-subject" class="modal-subject"></div>
+      <h2 id="modal-title" class="modal-title"></h2>
+    </div>
+    <div class="modal-body">
+      <div id="modal-preview" class="modal-preview"></div>
+      <p id="modal-desc" class="modal-desc"></p>
+    </div>
+    <div class="modal-footer">
+      <code id="modal-file-info" class="modal-file-info"></code>
+      <button id="btn-download" class="btn-download">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 11l4 4 4-4M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+<footer class="site-footer" style="text-align:center;padding:1rem;font-size:.72rem;color:var(--surface4);border-top:1px solid var(--border-soft);margin-top:2rem;">
+  <p><span id="footer-text">Made by Lal Salam Comrade</span></p>
+</footer>
+
+<script src="data/config.js" defer></script>
+<script src="js/guest.js" defer></script>
+<script src="js/notify.js" defer></script>
+<script src="js/app.js" defer></script>
+<script src="js/animations.js" defer></script>
+</body>
+</html>
